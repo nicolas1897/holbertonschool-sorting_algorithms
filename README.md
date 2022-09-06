@@ -1,1 +1,1 @@
-# holbertonschool-sorting_algorithms
+this project is about  sorting_algorithms & Big O
