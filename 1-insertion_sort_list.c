@@ -1,99 +1,73 @@
 #include "sort.h"
+listint_t *swap(listint_t **current, listint_t **sorted);
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers in ascending
+ * order using the insertion sort algorithm
+ * @list: Pointer to a pointer to the head of the list.
+ */
+void insertion_sort_list(listint_t **list)
+{
+	listint_t *current;
+	listint_t *sorted;
 
 
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
+		return;
+
+	sorted = *list;
+	current = (*list)->next;
+
+	while (current != NULL)
+	{
+		if (sorted != NULL &&  current->n < sorted->n)
+		{
+
+			current = swap(&current, &sorted);
+			sorted = current->prev;
+			if (sorted == NULL)
+				*list = current;
+			print_list(*list);
+
+			while (sorted != NULL && current->n < sorted->n)
+			{
+				current = swap(&current, &sorted);
+				sorted = current->prev;
+				if (sorted == NULL)
+					*list = current;
+				print_list(*list);
+			}
+		}
+		else
+		{
+			sorted = current;
+			current = sorted->next;
+		}
+	}
+}
 
 /**
-
- * insertion_sort_list - inserts right unsorted side into left sorted side
-
- * @list: doubly linked list to sort
-
- *
-
+ * swap - Swaps the numbers in the array to put them in order
+ * @current: Pointer to a pointer to a node in the linked list
+ * @sorted: Pointer to a pointer to a node in the linked list
+ * Return: A pointer to the current node.
  */
-
-void insertion_sort_list(listint_t **list)
-  
+listint_t *swap(listint_t **current, listint_t **sorted)
 {
-  
-  listint_t *c, *p, *nextnode;
-  
+	listint_t *tmp;
 
-  
-  if (list == NULL || !(*list) || (*list)->next == NULL)
-    
-    return;
-  
-  c = (*list)->next;
-  
-  nextnode = c->next;
-  
-  while (c)
-    
-    {
-      
-      if (c->n < c->prev->n)
-	
+	tmp = (*current)->next;
+	if (*sorted != NULL)
+		(*sorted)->next = tmp;
+	if (tmp != NULL)
 	{
-	  
-	  p = c->prev;
-	  
-	  while (p && (c->n < p->n))
-	    
-	    {
-	      
-	      if (!(p->prev))
-		
-		{
-		  
-		  p->prev = c;
-		  
-		  c->prev->next = c->next;
-		  
-		  if (c->next)
-		    
-		    c->next->prev = c->prev;
-		  
-		  c->next = p;
-		  
-		  c->prev = NULL;
-		  
-		  *list = c;
-		  
-		}
-	      
-	      else
-		
-		{
-		  
-		  c->prev->next = c->next;
-		  
-		  if (c->next)
-		    
-		    c->next->prev = c->prev;
-		  
-		  p->prev->next = c;
-		  
-		  c->prev = p->prev;
-		  
-		  p->prev = c;
-		  
-		  c->next = p;
-		  
-		}
-	      
-	      print_list(*list);
-	      
-	      p = c->prev;
-	      
-	    }
-	  
+		tmp->prev = *sorted;
 	}
-      
-      c = nextnode;
-      
-      c ? (nextnode = c->next) : (nextnode = NULL);
-      
-    }
-  
+	if (*current != NULL)
+		(*current)->next = *sorted;
+		(*current)->prev = (*sorted)->prev;
+	if ((*sorted)->prev != NULL)
+		(*sorted)->prev->next = *current;
+	((*sorted)->prev) = *current;
+
+	return (*current);
 }
